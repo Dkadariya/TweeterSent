@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text Analyzer</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Bstyle.css')}}">
+	<script type="text/javascript" src="{{ url_for('static', filename='Chart.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Edisp.js')}}"></script>
+</head>
+<body>
+
+<div class="container">
+<div class="container-h1"><h1>Social Media Analyzer:</h1>
+Dipesh Kadariya<br> Prem Bhushal
+
+</div>
+<div class="container1">
+
+<form id="form1" action="http://127.0.0.1:5000/scount/" method="post" role="form">
+<input type="submit" name="submit" value="view Sentiment chart" style="margin-top: -18px;">
+</form>
+<hr>
+
+<form id="form1" action="http://127.0.0.1:5000/noun_c/" method="post" role="form">
+<input type="submit" name="submit" value="view Noun-Phrase count" style="margin-top: -18px;">
+</form>
+<hr>
+
+<form id="form1" action="http://127.0.0.1:5000/avgs/" method="post" role="form">
+<input type="submit" name="submit" value="overall average sentiment" style="margin-top: -18px;">
+</form>
+<hr>
+
+<form id="form1" action="http://127.0.0.1:5000/search/" method="post" role="form">
+<div class="text1">
+Text Search:<br>
+	<input type="text" id="search-text" name="search-text" placeholder="Enter text to search...."></div>
+	<input type="submit" name="submit" value="submit" class="button">
+</form>
+<br>
+<hr>
+<form id="form1" action="http://127.0.0.1:5000/sentiment/" method="post" role="form">
+<div class="radior">
+	sentiment Filter:	<br>
+	<input type="radio" name="sent" value="positive" id="s1"><label for="s1"><span></span>Positive</label><br>
+	<input type="radio" name="sent" value="negative" id="s2"><label for="s2"><span></span>Negative</label><br>
+	<input type="radio" name="sent" value="neutral" id="s3"><label for="s3"><span></span>Neutral</label><br>
+</div>	<input type="submit" name="submit" value="submit" class="button">
+
+</form>
+ 
+</div>
+
+{% if data %}
+
+{% if data[0]=='tweets' %}
+<table>
+{%for tweets in data%}
+<tr>
+	<td><li><b>{{tweets[0]}}</b></li><br>{{tweets[1]}}</td>
+</tr>
+{%endfor%}
+</table>
+
+{% elif data[0] =='scount' %}
+Sentiment Chart:
+<canvas id="myChart"></canvas>
+<script type="text/javascript">pie({{data[2]|safe}},{{data[3]|safe}});</script>
+
+{%if data[1]>0%}
+
+<div class="sent1"><h4>Total Average sentiment is Positive ({{data[1]}}) </h4></div>
+{% else %}
+
+<div class="sent2"><h4>Total Average sentiment is Negative ({{data[1]}}) </h4></div>
+{% endif %}
+
+{% elif data[0] =='noun' %}
+<canvas id="myChart1"></canvas>
+<script type="text/javascript">disp1({{data[1]|safe}},{{data[2]|safe}});</script>
+
+{% elif data[0] =='avg' %}
+{%if data[1]>0%}
+
+<div class="sent1"><h4>Total Average sentiment is Positive ({{data[1]}}) </h4></div>
+{% else %}
+
+<div class="sent2"><h4>Total Average sentiment is Negative ({{data[1]}}) </h4></div>
+{% endif %}
+{% else %}
+<script type="text/javascript">disp({{data}})</script>
+{% endif %}
+{% endif %}
+
+</div>
+</body>
+</html>
